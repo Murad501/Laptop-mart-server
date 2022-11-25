@@ -28,7 +28,7 @@ const verifyJWT = (req, res, next)=>{
 
 }
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@user1.istzhai.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -54,10 +54,27 @@ const run = async() => {
         })
 
         //products
+        app.get('/products', async(req, res)=>{
+            const query = {}
+            const result = await productsCollection.find(query).toArray()
+            res.send(result)
+        })
+
         app.post('/products', async(req, res)=>{
             const product = req.body
             const result = await productsCollection.insertOne(product)
             res.send(result) 
+        })
+
+        //product
+        app.patch('/product/:id', async(req, res)=>{
+            const id = req.params.id
+            const query = {_id: ObjectId(id)}
+            const updateDoc = {
+                $set: {advertised: true}
+            }
+            const result = await productsCollection.updateOne(query, updateDoc)
+            res.send(result)
         })
 
         //jwt
