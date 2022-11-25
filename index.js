@@ -35,7 +35,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 const run = async() => {
     try{
         const usersCollection = client.db('LaptopMart').collection('users')
-        const sellersCollection = client.db('LaptopMart').collection('sellers')
+        const productsCollection = client.db('LaptopMart').collection('products')
 
         //users
         app.post('/users', async(req, res)=>{
@@ -53,11 +53,11 @@ const run = async() => {
             res.send(result)
         })
 
-        //sellers
-        app.post('/sellers', async(req, res)=>{
-            const seller = req.body
-            const result = await sellersCollection.insertOne(seller)
-            res.send(result)
+        //products
+        app.post('/products', async(req, res)=>{
+            const product = req.body
+            const result = await productsCollection.insertOne(product)
+            res.send(result) 
         })
 
         //jwt
