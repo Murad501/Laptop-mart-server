@@ -54,6 +54,20 @@ const run = async() => {
             res.send(result)
         })
 
+        //sellers
+        app.get('/sellers', async(req, res)=> {
+            const query = {role: 'seller'}
+            const result = await usersCollection.find(query).toArray()
+            res.send(result)
+        })
+
+        app.delete('/seller/:id', async(req, res)=> {
+            const id = req.params.id
+            const query = {_id: ObjectId(id)}
+            const result = await usersCollection.deleteOne(query)
+            res.send(result)
+        })
+
         //categories
         app.get('/categories', async(req, res)=> {
             const query = {}
