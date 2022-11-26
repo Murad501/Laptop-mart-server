@@ -36,6 +36,7 @@ const run = async() => {
     try{
         const usersCollection = client.db('LaptopMart').collection('users')
         const productsCollection = client.db('LaptopMart').collection('products')
+        const categoriesCollection = client.db('LaptopMart').collection('categories')
 
         //users
         app.post('/users', async(req, res)=>{
@@ -53,6 +54,13 @@ const run = async() => {
             res.send(result)
         })
 
+        //categories
+        app.get('/categories', async(req, res)=> {
+            const query = {}
+            const result = await categoriesCollection.find(query).toArray()
+            res.send(result)
+        })
+
         //products
         app.get('/products', async(req, res)=>{
             const query = {}
@@ -64,6 +72,16 @@ const run = async() => {
             const product = req.body
             const result = await productsCollection.insertOne(product)
             res.send(result) 
+        })
+
+        //advertised products
+        app.get('/advertised', async(req, res)=>{
+            const query = {
+                advertised: true,
+                available: true
+            }
+            const result = await productsCollection.find(query).toArray()
+            res.send(result)
         })
 
         //product
