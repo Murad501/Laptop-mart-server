@@ -40,14 +40,11 @@ const run = async() => {
 
         //users
         app.post('/users', async(req, res)=>{
-            console.log('from users')
             const user = req.body
-            console.log(user)
             const email = user.email
             const query = {email: email}
             const addedUser = await usersCollection.findOne(query)
             if(addedUser){
-                console.log('already added')
                 return res.send ({acknowledged:true})
             }
             const result = await usersCollection.insertOne(user)
@@ -78,6 +75,18 @@ const run = async() => {
             res.send(result)
         })
 
+        //check seller verify
+        app.get('/sellerVerify', async(req, res)=>{
+            console.log(req.query.email)
+            const email = req.query.email
+            const query = {email: email}
+            const user = await usersCollection.findOne(query)
+            if(user.verified){
+                return res.send({verified: true})
+            }
+            res.send({verified: false})
+        })
+
         //categories
         app.get('/categories', async(req, res)=> {
             const query = {}
@@ -86,7 +95,6 @@ const run = async() => {
         })
 
         app.get('/category/:name', async(req, res)=> {
-            console.log(req.params.name)
             const name = req.params.name
             const query = {category: name}
             const result = await productsCollection.find(query).toArray()
