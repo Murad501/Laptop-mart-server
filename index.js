@@ -76,11 +76,33 @@ const run = async() => {
             res.send(result)
         })
 
+        app.get('/seller/:email', async(req, res)=>{
+            const email = req.params.email
+            const query = {email: email}
+            const user = await usersCollection.findOne(query)
+            res.send({isSeller: user.role === 'seller'})
+        })
+
         //buyers
         app.get('/buyers', async(req, res)=>{
-            const query = {role: 'buyers'}
+            const query = {role: 'buyer'}
             const result = await usersCollection.find(query).toArray()
             res.send(result)
+        })
+
+        app.delete('/buyer/:id', async(req, res)=> {
+            const id = req.params.id
+            const query = {_id: ObjectId(id)}
+            const result = await usersCollection.deleteOne(query)
+            res.send(result)
+        })
+
+        //admin
+        app.get('/admin/:email', async(req, res)=>{
+            const email = req.params.email
+            const query = {email: email}
+            const user = await usersCollection.findOne(query)
+            res.send({isAdmin: user.role === 'admin'})
         })
 
         //check seller verify
