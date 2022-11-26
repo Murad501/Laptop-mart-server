@@ -37,6 +37,7 @@ const run = async() => {
         const usersCollection = client.db('LaptopMart').collection('users')
         const productsCollection = client.db('LaptopMart').collection('products')
         const categoriesCollection = client.db('LaptopMart').collection('categories')
+        const bookingProductCollection = client.db('LaptopMart').collection('bookingProduct')
 
         //users
         app.post('/users', async(req, res)=>{
@@ -75,9 +76,15 @@ const run = async() => {
             res.send(result)
         })
 
+        //buyers
+        app.get('/buyers', async(req, res)=>{
+            const query = {role: 'buyers'}
+            const result = await usersCollection.find(query).toArray()
+            res.send(result)
+        })
+
         //check seller verify
         app.get('/sellerVerify', async(req, res)=>{
-            console.log(req.query.email)
             const email = req.query.email
             const query = {email: email}
             const user = await usersCollection.findOne(query)
@@ -139,6 +146,13 @@ const run = async() => {
             const id = req.params.id
             const query = {_id: ObjectId(id)}
             const result = await productsCollection.deleteOne(query)
+            res.send(result)
+        })
+
+        //bookingProduct
+        app.post('/bookingproduct', async(req, res)=> {
+            const product = req.body
+            const result = await bookingProductCollection.insertOne(product)
             res.send(result)
         })
 
