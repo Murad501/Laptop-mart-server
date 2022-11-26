@@ -12,21 +12,21 @@ app.get('/', (req, res)=>{
     res.send('data is coming soon')
 })
 
-const verifyJWT = (req, res, next)=>{
-    const headers = req.headers.authorization
-    if(!headers){
-        return res.status(401).send({message: 'unauthorized access'})
-    }
-    const token = headers.split(' ')[1]
-    jwt.verify(token, process.env.ACCESS_TOKEN, (error, decoded)=>{
-        if(error){
-            return res.status(401).send({message: 'unauthorized access'})
-        }
-        req.decoded = decoded
-        next()
-    })
+// const verifyJWT = (req, res, next)=>{
+//     const headers = req.headers.authorization
+//     if(!headers){
+//         return res.status(401).send({message: 'unauthorized access'})
+//     }
+//     const token = headers.split(' ')[1]
+//     jwt.verify(token, process.env.ACCESS_TOKEN, (error, decoded)=>{
+//         if(error){
+//             return res.status(401).send({message: 'unauthorized access'})
+//         }
+//         req.decoded = decoded
+//         next()
+//     })
 
-}
+// }
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@user1.istzhai.mongodb.net/?retryWrites=true&w=majority`;
@@ -95,6 +95,13 @@ const run = async() => {
             const query = {_id: ObjectId(id)}
             const result = await usersCollection.deleteOne(query)
             res.send(result)
+        })
+
+        app.get('/buyer/:email', async(req, res)=>{
+            const email = req.params.email
+            const query = {email: email}
+            const user = await usersCollection.findOne(query)
+            res.send({isBuyer: user.role === 'buyer'})
         })
 
         //admin
