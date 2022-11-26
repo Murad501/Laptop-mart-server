@@ -68,6 +68,16 @@ const run = async() => {
             res.send(result)
         })
 
+        app.patch('/seller/:id', async(req, res)=>{
+            const id = req.params.id
+            const query = {_id: ObjectId(id)}
+            const updateDoc = {
+                $set: {verified: true}
+            }
+            const result = await usersCollection.updateOne(query, updateDoc)
+            res.send(result)
+        })
+
         //categories
         app.get('/categories', async(req, res)=> {
             const query = {}
